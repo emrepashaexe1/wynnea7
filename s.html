@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Giriş Sistemi</title>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #121212;
+            color: white;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.2);
+            text-align: center;
+            width: 300px;
+            transition: transform 0.5s ease;
+        }
+
+        h2 {
+            margin-bottom: 15px;
+            animation: fadeIn 1s ease;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            transform: scale(1.05);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #1DB954;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: #17a74b;
+            transform: scale(1.05);
+        }
+
+        .switch {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .switch a {
+            color: #1DB954;
+            cursor: pointer;
+        }
+
+        /* Animasyonlar */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Kar Efekti */
+        .snow-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .snowflake {
+            position: absolute;
+            top: 0;
+            width: 5px;
+            height: 5px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            from {
+                transform: translateY(0);
+            }
+            to {
+                transform: translateY(100vh);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="snow-container"></div>
+
+    <div class="container" id="loginBox">
+        <h2><i class="fas fa-user-circle"></i> Giriş Yap</h2>
+        <input type="text" id="loginUsername" placeholder="Kullanıcı Adı" required>
+        <input type="password" id="loginPassword" placeholder="Şifre" required>
+        <button onclick="login()">Giriş Yap</button>
+        <p class="switch">Hesabınız yok mu? <a onclick="toggleForm()">Kayıt Ol</a></p>
+    </div>
+
+    <div class="container" id="registerBox" style="display: none;">
+        <h2><i class="fas fa-user-plus"></i> Kayıt Ol</h2>
+        <input type="text" id="registerUsername" placeholder="Kullanıcı Adı" required>
+        <input type="password" id="registerPassword" placeholder="Şifre" required>
+        <button onclick="register()">Kayıt Ol</button>
+        <p class="switch">Zaten hesabınız var mı? <a onclick="toggleForm()">Giriş Yap</a></p>
+    </div>
+
+    <script>
+        function createSnowflake() {
+            const snowflake = document.createElement("div");
+            snowflake.classList.add("snowflake");
+            snowflake.style.left = Math.random() * 100 + "vw";
+            snowflake.style.animationDuration = Math.random() * 3 + 2 + "s";
+            document.querySelector(".snow-container").appendChild(snowflake);
+            setTimeout(() => { snowflake.remove(); }, 5000);
+        }
+        setInterval(createSnowflake, 200);
+
+        function toggleForm() {
+            let loginBox = document.getElementById("loginBox");
+            let registerBox = document.getElementById("registerBox");
+            if (loginBox.style.display === "none") {
+                loginBox.style.display = "block";
+                registerBox.style.display = "none";
+            } else {
+                loginBox.style.display = "none";
+                registerBox.style.display = "block";
+            }
+        }
+
+        function register() {
+            let username = document.getElementById("registerUsername").value;
+            let password = document.getElementById("registerPassword").value;
+
+            if (username === "" || password === "") {
+                alert("Kullanıcı adı ve şifre boş olamaz!");
+                return;
+            }
+
+            if (localStorage.getItem(username)) {
+                alert("Bu kullanıcı adı zaten alınmış!");
+                return;
+            }
+
+            localStorage.setItem(username, password);
+            alert("Kayıt başarılı! Şimdi giriş yapabilirsiniz.");
+            toggleForm();
+        }
+
+        function login() {
+            let username = document.getElementById("loginUsername").value;
+            let password = document.getElementById("loginPassword").value;
+
+            if (localStorage.getItem(username) === password) {
+                alert("Giriş başarılı!");
+            } else {
+                alert("Kullanıcı adı veya şifre hatalı!");
+            }
+        }
+    </script>
+
+</body>
+</html>
